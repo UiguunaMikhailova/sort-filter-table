@@ -8,9 +8,9 @@ class ItemController {
         return res.json(item)
     }
     async getAll(req, res) {
-        let { page = 1, limit = 10 } = req.query;
-        const offset = page * limit - limit;
-        const items = await Item.findAndCountAll({ limit, offset });
+        // let { page = 1, limit = 10 } = req.query;
+        // const offset = page * limit - limit;
+        const items = await Item.findAll();
         return res.json(items);
     }
 }
