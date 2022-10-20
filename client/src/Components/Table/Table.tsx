@@ -1,19 +1,8 @@
 import Pagination from 'Components/Pagination/Pagination';
 import TableItem from 'Components/TableItem/TableItem';
 import React, { useState } from 'react';
+import { TableProps } from 'types/types';
 import './Table.css';
-
-type Item = {
-  date: string;
-  name: string;
-  quantity: number;
-  distance: number;
-  id: number;
-};
-
-type TableProps = {
-  items: Item[];
-};
 
 export default function Table(props: TableProps) {
   return (
@@ -25,10 +14,10 @@ export default function Table(props: TableProps) {
           <th className="table__item-title">Количество</th>
           <th className="table__item-title">Дистанция</th>
         </tr>
-        {props.items.map((item) => {
+        {props.items.map((item, index) => {
           return (
             <TableItem
-              key={item.id}
+              key={index}
               date={item.date}
               name={item.name}
               quantity={item.quantity}

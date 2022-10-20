@@ -1,12 +1,6 @@
 import React from 'react';
+import { Item } from 'types/types';
 import './TableItem.css';
-
-type Item = {
-  date: string;
-  name: string;
-  quantity: number;
-  distance: number;
-};
 
 export default function TableItem(props: Item) {
   return (
