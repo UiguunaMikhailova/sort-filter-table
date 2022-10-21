@@ -3,10 +3,12 @@ import { TableProps } from 'types/types';
 import './Pagination.css';
 
 export default function Pagination(props: Omit<TableProps, 'items'>) {
+  // массив с цифрами страниц
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(props.totalItems / props.itemsPerPage); i += 1) {
     pageNumbers.push(i);
   }
+
   return (
     <>
       <div className="pagination">

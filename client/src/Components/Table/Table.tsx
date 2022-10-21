@@ -1,6 +1,6 @@
+import React from 'react';
 import Pagination from 'Components/Pagination/Pagination';
 import TableItem from 'Components/TableItem/TableItem';
-import React from 'react';
 import { TableProps } from 'types/types';
 import './Table.css';
 

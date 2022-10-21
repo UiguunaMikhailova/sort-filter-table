@@ -3,7 +3,9 @@ import { SortProps } from 'types/types';
 import './Sort.css';
 
 export default function Sort(props: SortProps) {
-  const select = useRef<HTMLSelectElement>(null);
+  const select = useRef<HTMLSelectElement>(null); // выбор условия для сортировки
+
+  // отправление значения сортировки в родительский компонент
   function setValue() {
     props.setSortValue(select.current!.value);
   }

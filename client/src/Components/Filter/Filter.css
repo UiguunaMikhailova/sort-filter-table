@@ -5,6 +5,7 @@
     gap: 5px;
     margin: 0 auto;
 }
+
 .button {
     cursor: pointer;
     color: #27262a;
@@ -17,9 +18,11 @@
     font-size: 18px;
     font-weight: 700;
 }
+
 .button:hover {
     border: 3px solid #4b3683;
 }
+
 .select, .input {
     background-color: #fcf9ff;
     border: 1px solid #acacac;

@@ -3,9 +3,11 @@ import { FilterProps } from 'types/types';
 import './Filter.css';
 
 export default function Filter(props: FilterProps) {
-  const firstSelect = useRef<HTMLSelectElement>(null);
-  const secondSelect = useRef<HTMLSelectElement>(null);
-  const inputText = useRef<HTMLInputElement>(null);
+  const firstSelect = useRef<HTMLSelectElement>(null); // выбор категории, по которой будет фильтрация
+  const secondSelect = useRef<HTMLSelectElement>(null); // выбор условия, по которому будет фильтрация
+  const inputText = useRef<HTMLInputElement>(null); // текстовое поле для ввода
+
+  // отправление значений фильтрации в родительский компонент
   function getValues() {
     props.setFilterValues(
       firstSelect.current!.value,
@@ -13,6 +15,7 @@ export default function Filter(props: FilterProps) {
       inputText.current!.value
     );
   }
+
   return (
     <>
       <span>Фильтрация: </span>

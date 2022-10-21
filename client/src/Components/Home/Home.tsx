@@ -10,7 +10,7 @@ export default function Home() {
   const [items, setItems] = useState([]);
   const [initialItems, setInitialItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(5);
 
   useEffect(() => {
     getItems();

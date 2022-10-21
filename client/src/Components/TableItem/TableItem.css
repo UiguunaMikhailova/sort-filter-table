@@ -1,6 +1,7 @@
 .table__item {
     list-style-type: none;
 }
+
 .table__item-text {
     font-size: 20px;
     padding: 5px 10px;
