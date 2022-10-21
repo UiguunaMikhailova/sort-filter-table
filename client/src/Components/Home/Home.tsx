@@ -4,6 +4,7 @@ import getData from 'Requests/Requests';
 import './Home.css';
 import { Item } from 'types/types';
 import Form from 'Components/Form/Form';
+import { sortItems } from 'Helpers/Helpers';
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -26,69 +27,121 @@ export default function Home() {
     }
   }
 
-  function sortItems(sort: string) {
-    const sortedItems: never[] = [];
-    switch (sort) {
-      case 'quantity-desc':
-        sortedItems.push(...initialItems.sort((a: Item, b: Item) => b.quantity - a.quantity));
-        break;
-      case 'quantity-asc':
-        sortedItems.push(...initialItems.sort((a: Item, b: Item) => a.quantity - b.quantity));
-        break;
-      case 'distance-desc':
-        sortedItems.push(...initialItems.sort((a: Item, b: Item) => b.distance - a.distance));
-        break;
-      case 'distance-asc':
-        sortedItems.push(...initialItems.sort((a: Item, b: Item) => a.distance - b.distance));
-        break;
-      case 'name-desc':
-        sortedItems.push(
-          ...initialItems.sort((a: Item, b: Item) => {
-            if (a.name > b.name) return -1;
-            if (a.name < b.name) return 1;
-            return 0;
-          })
-        );
-        break;
-      case 'name-asc':
-        sortedItems.push(
-          ...initialItems.sort((a: Item, b: Item) => {
-            if (a.name < b.name) return -1;
-            if (a.name > b.name) return 1;
-            return 0;
-          })
-        );
-        break;
-      default:
-        sortedItems.push(...initialItems);
-    }
-    return sortedItems;
-  }
-
   function updateItems(sort: string, firstValue: string, secondValue: string, input: string) {
-    console.log(sort, firstValue, secondValue, input);
     setItems([...initialItems]);
     const filteredItems: never[] = [];
-    filteredItems.push(...sortItems(sort));
-
+    filteredItems.push(...sortItems(sort, initialItems));
     filterItems(filteredItems, firstValue, secondValue, input);
   }
 
   function filterItems(itemsArr: never[], firstValue: string, secondValue: string, input: string) {
     if (secondValue === 'contains') {
-      if (firstValue === 'name') {
-        setItems([
-          ...itemsArr.filter((item: Item) => item.name.toLowerCase().includes(input.toLowerCase())),
-        ]);
-      }
-      if (firstValue === 'date') {
-        setItems([
-          ...itemsArr.filter((item: Item) => item.date.toLowerCase().includes(input.toLowerCase())),
-        ]);
-      }
+      filterItemsContains(firstValue, itemsArr, input);
+    }
+
+    if (secondValue === 'equals') {
+      filterItemsEquals(firstValue, itemsArr, input);
+    }
+
+    if (secondValue === 'more') {
+      filterItemsMore(firstValue, itemsArr, input);
+    }
+    if (secondValue === 'less') {
+      filterItemsLess(firstValue, itemsArr, input);
     }
   }
 
+  function filterItemsContains(value: string, itemsArr: never[], input: string) {
+    if (value === 'name') {
+      setItems([
+        ...itemsArr.filter((item: Item) => item.name.toLowerCase().includes(input.toLowerCase())),
+      ]);
+    }
+    if (value === 'date') {
+      setItems([
+        ...itemsArr.filter((item: Item) => item.date.toLowerCase().includes(input.toLowerCase())),
+      ]);
+    }
+    if (value === 'quantity') {
+      setItems([
+        ...itemsArr.filter((item: Item) =>
+          item.quantity.toString().toLowerCase().includes(input.toLowerCase())
+        ),
+      ]);
+    }
+    if (value === 'distance') {
+      setItems([
+        ...itemsArr.filter((item: Item) =>
+          item.distance.toString().toLowerCase().includes(input.toLowerCase())
+        ),
+      ]);
+    }
+  }
+
+  function filterItemsEquals(value: string, itemsArr: never[], input: string) {
+    if (value === 'name') {
+      setItems([
+        ...itemsArr.filter((item: Item) => item.name.toLowerCase() === input.toLowerCase()),
+      ]);
+    }
+    if (value === 'date') {
+      setItems([
+        ...itemsArr.filter((item: Item) => item.date.toLowerCase() === input.toLowerCase()),
+      ]);
+    }
+    if (value === 'quantity') {
+      setItems([
+        ...itemsArr.filter(
+          (item: Item) => item.quantity.toString().toLowerCase() === input.toLowerCase()
+        ),
+      ]);
+    }
+    if (value === 'distance') {
+      setItems([
+        ...itemsArr.filter(
+          (item: Item) => item.distance.toString().toLowerCase() === input.toLowerCase()
+        ),
+      ]);
+    }
+  }
+
+  function filterItemsMore(value: string, itemsArr: never[], input: string) {
+    if (value === 'name') {
+      setItems([...itemsArr.filter((item: Item) => item.name.toLowerCase() > input.toLowerCase())]);
+    }
+    if (value === 'date') {
+      setItems([
+        ...itemsArr.filter((item: Item) => {
+          return Date.parse(item.date) >= Date.parse(input);
+        }),
+      ]);
+    }
+    if (value === 'quantity') {
+      setItems([...itemsArr.filter((item: Item) => item.quantity >= Number(input))]);
+    }
+    if (value === 'distance') {
+      setItems([...itemsArr.filter((item: Item) => item.distance >= Number(input))]);
+    }
+  }
+
+  function filterItemsLess(value: string, itemsArr: never[], input: string) {
+    if (value === 'name') {
+      setItems([...itemsArr.filter((item: Item) => item.name.toLowerCase() < input.toLowerCase())]);
+    }
+    if (value === 'date') {
+      setItems([
+        ...itemsArr.filter((item: Item) => {
+          return Date.parse(item.date) <= Date.parse(input);
+        }),
+      ]);
+    }
+    if (value === 'quantity') {
+      setItems([...itemsArr.filter((item: Item) => item.quantity <= Number(input))]);
+    }
+    if (value === 'distance') {
+      setItems([...itemsArr.filter((item: Item) => item.distance <= Number(input))]);
+    }
+  }
   return (
     <div className="home">
       <Form updateItems={updateItems} />
