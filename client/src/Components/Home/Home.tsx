@@ -1,93 +1,97 @@
-import React, { SetStateAction, useEffect, useState } from 'react';
-import Sort from 'Components/Sort/Sort';
-import Filter from 'Components/Filter/Filter';
+import React, { useEffect, useState } from 'react';
 import Table from 'Components/Table/Table';
 import getData from 'Requests/Requests';
 import './Home.css';
 import { Item } from 'types/types';
+import Form from 'Components/Form/Form';
 
 export default function Home() {
   const [items, setItems] = useState([]);
-  // const initialItems = [...items];
+  const [initialItems, setInitialItems] = useState([]);
 
   useEffect(() => {
-    updateItems();
+    getItems();
   });
 
-  function updateItems() {
+  function getItems() {
     if (items.length) {
       setItems(items);
     } else {
       getData().then((data) => {
         if (data) {
           setItems(data);
+          setInitialItems(data);
         }
       });
     }
   }
 
-  function sortItems(value: string) {
-    switch (value) {
+  function sortItems(sort: string) {
+    const sortedItems: never[] = [];
+    switch (sort) {
       case 'quantity-desc':
-        setItems([...items.sort((a: Item, b: Item) => b.quantity - a.quantity)]);
+        sortedItems.push(...initialItems.sort((a: Item, b: Item) => b.quantity - a.quantity));
         break;
       case 'quantity-asc':
-        setItems([...items.sort((a: Item, b: Item) => a.quantity - b.quantity)]);
+        sortedItems.push(...initialItems.sort((a: Item, b: Item) => a.quantity - b.quantity));
         break;
       case 'distance-desc':
-        setItems([...items.sort((a: Item, b: Item) => b.distance - a.distance)]);
+        sortedItems.push(...initialItems.sort((a: Item, b: Item) => b.distance - a.distance));
         break;
       case 'distance-asc':
-        setItems([...items.sort((a: Item, b: Item) => a.distance - b.distance)]);
+        sortedItems.push(...initialItems.sort((a: Item, b: Item) => a.distance - b.distance));
         break;
       case 'name-desc':
-        setItems([
-          ...items.sort((a: Item, b: Item) => {
+        sortedItems.push(
+          ...initialItems.sort((a: Item, b: Item) => {
             if (a.name > b.name) return -1;
             if (a.name < b.name) return 1;
             return 0;
-          }),
-        ]);
+          })
+        );
         break;
       case 'name-asc':
-        setItems([
-          ...items.sort((a: Item, b: Item) => {
+        sortedItems.push(
+          ...initialItems.sort((a: Item, b: Item) => {
             if (a.name < b.name) return -1;
             if (a.name > b.name) return 1;
             return 0;
-          }),
-        ]);
+          })
+        );
         break;
       default:
-        setItems(items);
+        sortedItems.push(...initialItems);
+    }
+    return sortedItems;
+  }
+
+  function updateItems(sort: string, firstValue: string, secondValue: string, input: string) {
+    console.log(sort, firstValue, secondValue, input);
+    setItems([...initialItems]);
+    const filteredItems: never[] = [];
+    filteredItems.push(...sortItems(sort));
+
+    filterItems(filteredItems, firstValue, secondValue, input);
+  }
+
+  function filterItems(itemsArr: never[], firstValue: string, secondValue: string, input: string) {
+    if (secondValue === 'contains') {
+      if (firstValue === 'name') {
+        setItems([
+          ...itemsArr.filter((item: Item) => item.name.toLowerCase().includes(input.toLowerCase())),
+        ]);
+      }
+      if (firstValue === 'date') {
+        setItems([
+          ...itemsArr.filter((item: Item) => item.date.toLowerCase().includes(input.toLowerCase())),
+        ]);
+      }
     }
   }
 
-  function filterItems(firstValue: string, secondValue: string, input: string) {
-    // if (secondValue === 'contains') {
-    //   if (firstValue === 'name') {
-    //     setItems([
-    //       ...initialItems.filter((item: Item) =>
-    //         item.name.toLowerCase().includes(input.toLowerCase())
-    //       ),
-    //     ]);
-    //   }
-    //   if (firstValue === 'date') {
-    //     setItems([
-    //       ...initialItems.filter((item: Item) =>
-    //         item.date.toLowerCase().includes(input.toLowerCase())
-    //       ),
-    //     ]);
-    //   }
-  }
-    // const filteredArr = items.filter((item: Item) => item.name.toLowerCase().includes(input.toLowerCase()));
-    // setItems([...items.filter((item: Item) => item.name.toLowerCase().includes(input.toLowerCase()))]);
-    // console.log(firstValue, secondValue, input);
-
   return (
     <div className="home">
-      <Filter filterItems={filterItems} />
-      <Sort sortItems={sortItems} />
+      <Form updateItems={updateItems} />
       <Table items={items} />
     </div>
   );

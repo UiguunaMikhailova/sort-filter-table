@@ -10,11 +10,15 @@ type TableProps = {
 };
 
 type SortProps = {
-  sortItems: (value: string) => void;
+  setSortValue: (value: string) => void;
 };
 
 type FilterProps = {
-  filterItems: (value: string, secondValue: string, inputText: string) => void;
+  setFilterValues: (value: string, secondValue: string, inputText: string) => void;
 };
 
-export { Item, TableProps, SortProps, FilterProps };
+type FormProps = {
+  updateItems: (sort: string, value: string, secondValue: string, inputText: string) => void;
+};
+
+export { Item, TableProps, SortProps, FilterProps, FormProps };
