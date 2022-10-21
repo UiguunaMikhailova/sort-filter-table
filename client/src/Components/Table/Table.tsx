@@ -1,6 +1,6 @@
 import Pagination from 'Components/Pagination/Pagination';
 import TableItem from 'Components/TableItem/TableItem';
-import React, { useState } from 'react';
+import React from 'react';
 import { TableProps } from 'types/types';
 import './Table.css';
 
@@ -26,7 +26,14 @@ export default function Table(props: TableProps) {
           );
         })}
       </table>
-      <Pagination />
+      <Pagination
+        paginate={props.paginate}
+        nextPage={props.nextPage}
+        prevPage={props.prevPage}
+        itemsPerPage={props.itemsPerPage}
+        totalItems={props.totalItems}
+        currentPage={props.currentPage}
+      />
     </>
   );
 }

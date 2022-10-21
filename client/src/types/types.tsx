@@ -7,6 +7,12 @@ type Item = {
 
 type TableProps = {
   items: Item[];
+  paginate: (page: number) => void;
+  nextPage: () => void;
+  prevPage: () => void;
+  itemsPerPage: number;
+  totalItems: number;
+  currentPage: number;
 };
 
 type SortProps = {

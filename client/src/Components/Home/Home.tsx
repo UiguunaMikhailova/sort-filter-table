@@ -9,6 +9,8 @@ import { sortItems } from 'Helpers/Helpers';
 export default function Home() {
   const [items, setItems] = useState([]);
   const [initialItems, setInitialItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   useEffect(() => {
     getItems();
@@ -26,6 +28,15 @@ export default function Home() {
       });
     }
   }
+
+  const lastItemIndex = currentPage * itemsPerPage;
+  const firstItemIndex = lastItemIndex - itemsPerPage;
+  const currentItems = items.slice(firstItemIndex, lastItemIndex);
+  const lastPage = Math.ceil(items.length / itemsPerPage);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const nextPage = () => setCurrentPage((prev) => (prev < lastPage ? prev + 1 : 1));
+  const prevPage = () => setCurrentPage((prev) => (prev > 1 ? prev - 1 : lastPage));
 
   function updateItems(sort: string, firstValue: string, secondValue: string, input: string) {
     setItems([...initialItems]);
@@ -145,7 +156,15 @@ export default function Home() {
   return (
     <div className="home">
       <Form updateItems={updateItems} />
-      <Table items={items} />
+      <Table
+        items={currentItems}
+        paginate={paginate}
+        nextPage={nextPage}
+        prevPage={prevPage}
+        itemsPerPage={itemsPerPage}
+        totalItems={items.length}
+        currentPage={currentPage}
+      />
     </div>
   );
 }
